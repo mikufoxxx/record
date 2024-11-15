@@ -8,7 +8,10 @@
 > > 也会写一些好玩的，或者想写的东西，比如[QmsgFox【mc插件】](https://github.com/mikufoxxx/QmsgFox)
 > > <br/>
 > > <br/>
-> > 当然也会夹杂一些别的语言，比如Go, Python, 甚至罕见的Dart/Flutter(~~我其实真的很喜欢Fltutter~~),详情可以见[第三方轻小说文库app【基于flutter】](https://github.com/mikufoxxx/miku-novel)~~已弃坑（~~
+> > 当然也会夹杂一些别的语言或技术，比如Docker, Go, Python, 甚至罕见的Dart/Flutter(~~我其实真的很喜欢Fltutter~~),详情可以见[第三方轻小说文库app【基于flutter】](https://github.com/mikufoxxx/miku-novel)~~已弃坑（~~
+---
+## 免责声明
+**本仓库的知识库体系并不完善，因为很多很基础的东西我不想重复写，不过我都会贴上相关的参考文献/链接**
 # 目录
 - JavaSE
   - 
