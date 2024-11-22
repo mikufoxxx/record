@@ -93,4 +93,160 @@ public class NullHandlingExample {
 如果不在这个范围，再去新建，这样就可以提升性能了。
 
 ### static和final的个人理解
-java里太多相似的关键字了，static, final就是典型。困扰了我很久，所以现在
+java里太多相似的关键字了，static, final就是典型。困扰了我很久，所以现在详细记录一下
+#### static
+1. static可以修饰成员变量，常量，方法和代码块
+2. 静态成员是全局的，归整个类所有，不依赖特定的对象，是被所有类的对象共享的
+3. 只要类被java虚拟机加载，就可以根据类名在全局数据域内找到他们
+
+也就是说，静态成员**被类的所有实例对象共享**。
+#### 被static修饰的属性(成员变量)称为静态变量，也叫做类变量； 
+访问方式不需要再通过对象来访问，而是可以直接通过类来访问
+```java
+class User{
+    public static int userId;
+ 
+    public int getUserId() {
+        return userId;
+    }
+ 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+}
+ 
+public class Test {
+    public void test() {
+        // 没有static的话，就是
+        // User user = new User();
+        // user.userId = 1;
+        User.userId = 1;
+    }
+}
+```
+#### 被static修饰的方法称为静态方法，也叫做类方法
+和成员变量类似，修饰后可以直接通过类来访问
+
+**静态方法中只可以调用静态方法**
+```java
+class User{
+    private static int userId;
+ 
+    public int getUserId() {
+        return userId;
+    }
+ 
+    public static void setUserId(int userId) {
+        User.userId = userId;
+    }
+}
+ 
+public class Test {
+    public void test() {
+      // 没有static的话，就是
+      // User user = new User();
+      // user.setUserId(1);
+        User.setUserId(1);
+    }
+}
+```
+#### 被static修饰的常量称为静态常量
+被static修饰的成员变量、常量、方法都**归整个类所有**，改变都是类似的
+
+和前面修饰成员变量和方法操作类似
+```java
+class User{
+    private static int userId;
+    public static String username = "admin"; 
+ 
+    public int getUserId() {
+        return userId;
+    }
+ 
+    public static void setUserId(int userId) {
+        User.userId = userId;
+    }
+}
+ 
+public class Test {
+    public void test() {
+        User.username = "SpecialFox";
+    }
+}
+```
+#### 被static修饰的代码块叫做静态代码块； 
+执行优先级高于非静态的初始化块，它会在**类初始化的时候执行一次，执行完成便销毁**，它仅能初始化类变量，即 static 修饰的数据成员。
+
+而非静态初始化块会在构造函数执行时，在构造函数主体代码执行之前被运行。
+> 静态代码块的执行顺序：静态代码块----->非静态代码块-------->构造函数
+> 
+> 静态代码块被 static 修饰，是属于类的，只在项目运行后类初始化时执行一次
+> 
+> 而非静态代码块在每个对象生成时都会被执行一次
+
+#### 被static修饰符的内部类，叫做静态内部类
+在外部类声明static，程序不会过编译
+
+所以必须在类的内部声明一个内部类
+
+>静态内部类跟静态方法一样，只能访问静态的成员变量和方法，不能访问非静态的方法和属性，但是普通内部类可以访问任意外部类的成员变量和方法
+> 
+> 静态内部类可以声明普通成员变量和方法，而普通内部类不能声明static成员变量和方法。
+> 
+> 静态内部类可以单独初始化
+
+```java
+public class Outer {
+    private String name;
+    private int age;
+ 
+    public static class Builder {
+        private String name;
+        private int age;
+ 
+        public Builder(int age) {
+            this.age = age;
+        }
+ 
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+ 
+        public Builder withAge(int age) {
+            this.age = age;
+            return this;
+        }
+ 
+        public Outer build() {
+            return new Outer(this);
+        }
+    }
+ 
+    private Outer(Builder b) {
+        this.age = b.age;
+        this.name = b.name;
+    }
+}
+```
+静态内部类调用外部类的构造函数，来构造外部类，由于静态内部类可以被单独初始化说有在外部就有以下实现：
+```java
+public Outer getOuter()
+{
+    Outer outer = new Outer.Builder(2).withName("SpecialFox").build();
+    return outer;
+}
+```
+#### 为什么我们要用静态类？
+1. 如果类的构造器或静态工厂中有多个参数，设计这样类时，最好使用Builder模式，特别是当大多数参数都是可选的时候。
+2. 如果现在不能确定参数的个数，最好一开始就使用构建器即Builder模式。
+
+#### Final
+> fianl 修饰类，不存在子类，比如String类
+> 
+> final修饰方法，子类不能重写。
+> 
+> final进行修饰属性，为常量，需要初始化，并且不可修改 ，常量命名通常用大写字母，每个字母中间用下划线隔开
+> 
+> final进行修饰属性，子类可以使用，但也不能修改
+
